@@ -4,6 +4,7 @@ import { formatDistanceToNow, format } from "date-fns";
 import BookmarkButton from "@/components/articles/BookmarkButton";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { sanitizeArticleHtml } from "@/lib/sanitize";
 
 interface ArticlePageProps {
   params: Promise<{ slug: string }>;
@@ -153,7 +154,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 prose-a:text-primary-container prose-a:no-underline hover:prose-a:underline
                 prose-img:rounded-none prose-img:border prose-img:border-zinc-200
                 text-on-surface"
-              dangerouslySetInnerHTML={{ __html: article.content }}
+              dangerouslySetInnerHTML={{ __html: sanitizeArticleHtml(article.content) }}
             />
           ) : (
             <div className="bg-surface-container-low p-8 text-center">
@@ -201,7 +202,6 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 <button
                   className="bg-zinc-100 hover:bg-zinc-200 p-3 transition-colors"
                   aria-label="Copy link"
-                  onClick={() => {}}
                 >
                   <span className="material-symbols-outlined text-sm">link</span>
                 </button>

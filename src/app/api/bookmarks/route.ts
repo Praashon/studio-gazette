@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { createServiceClient } from "@/lib/supabase";
+import { isValidUUID } from "@/lib/sanitize";
 
 export async function POST(request: Request) {
   try {
@@ -10,6 +11,13 @@ export async function POST(request: Request) {
     if (!articleId || !sessionId) {
       return NextResponse.json(
         { error: "articleId and sessionId are required" },
+        { status: 400 }
+      );
+    }
+
+    if (!isValidUUID(articleId) || !isValidUUID(sessionId)) {
+      return NextResponse.json(
+        { error: "Invalid articleId or sessionId format" },
         { status: 400 }
       );
     }
@@ -50,6 +58,13 @@ export async function DELETE(request: Request) {
     if (!articleId || !sessionId) {
       return NextResponse.json(
         { error: "articleId and sessionId are required" },
+        { status: 400 }
+      );
+    }
+
+    if (!isValidUUID(articleId) || !isValidUUID(sessionId)) {
+      return NextResponse.json(
+        { error: "Invalid articleId or sessionId format" },
         { status: 400 }
       );
     }
