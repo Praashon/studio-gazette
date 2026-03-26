@@ -14,46 +14,44 @@ interface NavbarProps {
 export default function Navbar({ categories = [] }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
-  
+
   const navContainer = useRef<HTMLElement>(null);
   const mobileMenuRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
-    // Initial entry animation for the Navbar
     const tl = gsap.timeline();
     tl.from(navContainer.current, {
-      y: -100,
+      y: -80,
       opacity: 0,
-      duration: 1,
-      ease: "power4.out"
+      duration: 0.8,
+      ease: "power3.out"
     })
     .from(".nav-item", {
-      y: -20,
+      y: -12,
       opacity: 0,
-      stagger: 0.1,
+      stagger: 0.06,
       ease: "power2.out",
-      duration: 0.6
-    }, "-=0.6");
+      duration: 0.5
+    }, "-=0.4");
   }, { scope: navContainer });
 
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 10);
-    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // Handle the Mobile Menu open animation
   useGSAP(() => {
     if (mobileOpen) {
       gsap.fromTo(
         mobileMenuRef.current,
         { height: 0, opacity: 0 },
-        { height: "auto", opacity: 1, duration: 0.5, ease: "power3.out" }
+        { height: "auto", opacity: 1, duration: 0.4, ease: "power3.out" }
       );
       gsap.fromTo(
         ".mobile-link",
-        { x: -20, opacity: 0 },
-        { x: 0, opacity: 1, stagger: 0.1, duration: 0.4, ease: "power2.out", delay: 0.2 }
+        { x: -16, opacity: 0 },
+        { x: 0, opacity: 1, stagger: 0.06, duration: 0.3, ease: "power2.out", delay: 0.15 }
       );
     }
   }, [mobileOpen]);
@@ -62,7 +60,7 @@ export default function Navbar({ categories = [] }: NavbarProps) {
     gsap.to(mobileMenuRef.current, {
       height: 0,
       opacity: 0,
-      duration: 0.4,
+      duration: 0.3,
       ease: "power3.in",
       onComplete: () => setMobileOpen(false)
     });
@@ -83,22 +81,24 @@ export default function Navbar({ categories = [] }: NavbarProps) {
   return (
     <nav
       ref={navContainer}
-      className={`fixed top-0 w-full z-50 transition-colors duration-300 ${
-        scrolled ? "glass border-b border-black/10 shadow-sm" : "bg-white border-b border-black"
+      className={`fixed top-0 w-full z-50 transition-all duration-300 ${
+        scrolled
+          ? "glass border-b border-black/5 shadow-sm"
+          : "bg-white border-b border-black"
       }`}
     >
-      <div className="flex justify-between items-center max-w-[1440px] mx-auto px-6 py-4">
+      <div className="flex justify-between items-center max-w-[1440px] mx-auto px-6 h-[72px]">
         {/* Left */}
         <div className="flex items-center gap-6">
-          <span className="nav-item text-[10px] font-label font-bold uppercase tracking-[0.15em] border-r border-zinc-300 pr-6 hidden lg:block">
+          <span className="nav-item text-[10px] font-label font-bold uppercase tracking-[0.15em] border-r border-zinc-200 pr-6 hidden lg:block text-zinc-400">
             Daily Edition &bull; {issueDate}
           </span>
-          <div className="hidden xl:flex items-center space-x-8">
+          <div className="hidden xl:flex items-center space-x-7">
             {navLinks.map((link, i) => (
               <Link
                 key={link.href}
-                className={`nav-item font-label text-[11px] uppercase tracking-[0.15em] transition-colors ${
-                  i === 0 ? "text-primary-container font-bold" : "text-zinc-600 hover:text-primary-container font-medium"
+                className={`nav-item font-label text-[11px] uppercase tracking-[0.12em] transition-colors duration-200 ${
+                  i === 0 ? "text-primary-container font-bold" : "text-zinc-500 hover:text-primary-container font-medium"
                 }`}
                 href={link.href}
               >
@@ -111,22 +111,32 @@ export default function Navbar({ categories = [] }: NavbarProps) {
         {/* Center Logo */}
         <Link
           href="/"
-          className="nav-item text-3xl md:text-4xl font-headline font-bold tracking-tighter absolute left-1/2 -translate-x-1/2"
+          className="nav-item text-2xl md:text-3xl font-headline font-bold tracking-tighter absolute left-1/2 -translate-x-1/2"
         >
           STUDIO <span className="font-light serif-italic">GAZETTE</span>
         </Link>
 
         {/* Right */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-2">
           <Link
-            href="/subscribe"
-            className="nav-item hidden sm:block bg-black text-white px-6 py-2 font-label font-bold uppercase tracking-wider text-[10px] hover:bg-zinc-800 transition-all"
+            href="/feeds"
+            className="nav-item hidden sm:flex items-center gap-1.5 px-3 py-2 font-label text-[10px] font-bold uppercase tracking-wider text-zinc-500 hover:text-primary-container transition-colors"
+            title="Manage Feeds"
           >
-            Subscribe
+            <span className="material-symbols-outlined text-sm">rss_feed</span>
+            <span className="hidden md:inline">Feeds</span>
+          </Link>
+          <Link
+            href="/bookmarks"
+            className="nav-item hidden sm:flex items-center gap-1.5 px-3 py-2 font-label text-[10px] font-bold uppercase tracking-wider text-zinc-500 hover:text-primary-container transition-colors"
+            title="Bookmarks"
+          >
+            <span className="material-symbols-outlined text-sm">bookmark</span>
+            <span className="hidden md:inline">Saved</span>
           </Link>
           {/* Mobile hamburger */}
           <button
-            className="nav-item xl:hidden p-2"
+            className="nav-item xl:hidden p-2 hover:bg-zinc-50 transition-colors"
             onClick={() => mobileOpen ? closeMenu() : setMobileOpen(true)}
             aria-label="Toggle menu"
           >
@@ -138,16 +148,16 @@ export default function Navbar({ categories = [] }: NavbarProps) {
       </div>
 
       {/* Mobile Menu */}
-      <div 
+      <div
         ref={mobileMenuRef}
-        className="xl:hidden bg-white border-t border-zinc-200 overflow-hidden"
+        className="xl:hidden bg-white border-t border-zinc-100 overflow-hidden"
         style={{ display: mobileOpen ? "block" : "none", opacity: 0, height: 0 }}
       >
-        <div className="px-6 py-6 space-y-4">
+        <div className="px-6 py-6 space-y-1">
           {navLinks.map((link) => (
             <div key={link.href} className="mobile-link">
               <Link
-                className="block font-label text-sm uppercase tracking-widest text-on-surface hover:text-primary-container transition-colors py-2"
+                className="block font-label text-sm uppercase tracking-widest text-on-surface hover:text-primary-container transition-colors py-3 border-b border-zinc-50"
                 href={link.href}
                 onClick={closeMenu}
               >
@@ -155,13 +165,22 @@ export default function Navbar({ categories = [] }: NavbarProps) {
               </Link>
             </div>
           ))}
-          <div className="mobile-link mt-4">
+          <div className="mobile-link pt-4 flex gap-3">
             <Link
-              href="/subscribe"
-              className="block bg-black text-white px-6 py-3 font-label font-bold uppercase tracking-wider text-xs text-center hover:bg-zinc-800 transition-all"
+              href="/feeds"
+              className="flex-1 flex items-center justify-center gap-2 border border-zinc-200 py-3 font-label font-bold uppercase tracking-wider text-xs hover:border-primary-container hover:text-primary-container transition-colors"
               onClick={closeMenu}
             >
-              Subscribe
+              <span className="material-symbols-outlined text-sm">rss_feed</span>
+              Feeds
+            </Link>
+            <Link
+              href="/bookmarks"
+              className="flex-1 flex items-center justify-center gap-2 border border-zinc-200 py-3 font-label font-bold uppercase tracking-wider text-xs hover:border-primary-container hover:text-primary-container transition-colors"
+              onClick={closeMenu}
+            >
+              <span className="material-symbols-outlined text-sm">bookmark</span>
+              Saved
             </Link>
           </div>
         </div>
