@@ -202,8 +202,8 @@ body {
 
 /* ---- Smooth Image Reveal ---- */
 .img-reveal {
-  filter: grayscale(100%);
-  transition: filter 0.7s ease, transform 0.7s ease;
+  filter: grayscale(60%);
+  transition: filter 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .group:hover .img-reveal,
@@ -216,6 +216,21 @@ details summary::-webkit-details-marker,
 details summary::marker {
   display: none;
   content: "";
+}
+
+details[open] > summary ~ * {
+  animation: details-open 0.3s ease-out;
+}
+
+@keyframes details-open {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ---- Skeleton Loading ---- */
@@ -236,5 +251,77 @@ details summary::marker {
   }
   100% {
     background-position: -200% 0;
+  }
+}
+
+/* ---- Smooth Page Transitions ---- */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-in {
+  animation: fade-in-up 0.4s ease-out both;
+}
+
+/* ---- Article Content Typography ---- */
+.article-content {
+  font-size: 1.0625rem;
+  line-height: 1.85;
+  letter-spacing: 0.005em;
+}
+
+.article-content p {
+  margin-bottom: 1.5em;
+}
+
+.article-content img {
+  width: 100%;
+  height: auto;
+  margin: 2rem 0;
+}
+
+.article-content a {
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+
+.article-content blockquote {
+  border-left: 3px solid var(--color-primary-container);
+  padding-left: 1.5rem;
+  font-family: var(--font-headline);
+  font-style: italic;
+  color: var(--color-on-surface-variant);
+}
+
+/* ---- Smooth Focus Styles ---- */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+button:focus-visible {
+  outline: 2px solid var(--color-primary-container);
+  outline-offset: 2px;
+}
+
+/* ---- Scrollbar Styling ---- */
+@media (min-width: 1024px) {
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-surface-container-high);
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-outline);
   }
 }

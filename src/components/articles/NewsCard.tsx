@@ -21,27 +21,27 @@ export default function NewsCard({ article }: NewsCardProps) {
 
   return (
     <Link href={`/article/${a.slug}`}>
-      <article className="relative flex flex-col bg-white border border-zinc-200 group cursor-pointer overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300">
+      <article className="relative flex flex-col bg-white group cursor-pointer overflow-hidden hover:shadow-lg transition-shadow duration-500">
         {/* Image Section */}
         <div className="aspect-video relative overflow-hidden">
           {a.image_url ? (
             <img
-              className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 img-reveal"
+              className="w-full h-full object-cover group-hover:scale-[1.03] transition-transform duration-700 ease-out"
               src={a.image_url}
               alt={a.title}
               loading="lazy"
             />
           ) : (
-            <div className="w-full h-full bg-gradient-to-br from-zinc-300 to-zinc-200 flex items-center justify-center group-hover:from-zinc-200 group-hover:to-zinc-100 transition-all">
+            <div className="w-full h-full bg-gradient-to-br from-zinc-200 to-zinc-100 flex items-center justify-center">
               <span className="text-zinc-400 font-label text-xs uppercase tracking-widest">
                 {a.source_name}
               </span>
             </div>
           )}
-          <div className="absolute inset-0 news-card-overlay opacity-80" />
+          <div className="absolute inset-0 news-card-overlay opacity-70 group-hover:opacity-80 transition-opacity duration-300" />
 
           {/* Bookmark */}
-          <div className="absolute top-4 right-4 z-10" onClick={(e) => e.preventDefault()}>
+          <div className="absolute top-4 right-4 z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" onClick={(e) => e.preventDefault()}>
             <BookmarkButton articleId={a.id} variant="overlay" />
           </div>
 
@@ -51,14 +51,14 @@ export default function NewsCard({ article }: NewsCardProps) {
               <span className="bg-primary-container px-2 py-0.5">
                 {a.categories?.name || a.source_name}
               </span>
-              <span className="opacity-80">{timeAgo} ago</span>
+              <span className="opacity-70">{timeAgo} ago</span>
             </div>
           </div>
         </div>
 
         {/* Content Section */}
         <div className="p-6 flex-1 flex flex-col justify-between">
-          <h3 className="text-2xl md:text-3xl font-headline font-bold leading-tight mb-4 group-hover:text-primary-container transition-colors">
+          <h3 className="text-xl md:text-2xl font-headline font-bold leading-snug mb-3 group-hover:text-primary-container transition-colors duration-300">
             {a.title}
           </h3>
           <p className="text-sm font-body text-on-surface-variant leading-relaxed line-clamp-2">
